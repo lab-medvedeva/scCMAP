@@ -9,23 +9,35 @@ def upperGenes(genes):
     return [gene.upper() for gene in genes]
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--TF_path')
+parser.add_argument('--TF_path1')
+parser.add_argument('--TF_path2')
 args = parser.parse_args()
 
-g = pd.read_csv(args.TF_path, sep='\t')
-tf = g.TF1.to_list()
-val = g.tfs_score.to_list()
+g1 = pd.read_csv(args.TF_path1, sep='\t')
+tf1 = g1.TF1.to_list()
+val1 = g1.tfs_score.to_list()
 
-data = {"genes":tf,"vals":val}
-data['genes'] = upperGenes(data['genes'])
-config = {"aggravate":True,"searchMethod":"CD","share":True,"combination":True,"db-version":"latest"}
-#metadata = [{"key":"Cell","value":"VCAP"}]
+g2 = pd.read_csv(args.TF_path2, sep='\t')
+tf2 = g2.TF1.to_list()
+val2 = g2.tfs_score.to_list()
+
+data = {"upGenes":tf1,
+        "dnGenes":tf2}
+data['upGenes'] = upperGenes(data['upGenes'])
+data['dnGenes'] = upperGenes(data['dnGenes'])
+config = {"aggravate":True,"searchMethod":"geneSet","share":True,"combination":True,"db-version":"latest"}
+#metadata = [{"key":"Tag","value":"gene-set python example"},{"key":"Cell","value":"MCF7"}]
 metadata = []
 payload = {"data":data,"config":config,"meta":metadata}
 headers = {'content-type':'application/json'}
 r = requests.post(url,data=json.dumps(payload),headers=headers)
-resCD= r.json()
+resGeneSet = r.json()
 
-print('Drug_name , Perturbation_id , Score, Cell_line')
-for Meta in resCD['topMeta']:
-    print(Meta['pert_desc'], ',', Meta['pert_id'], ',', Meta['score'], ',', Meta['cell_id'])
+for Meta in resGeneSet['topMeta']:
+    for name in Meta['pert_desc']:
+        if Meta['pert_desc'] == "-666":
+            Meta['pert_desc'] = "Unknown"
+
+print('Drug_name , Pubchem_id , Score, Cell_line')
+for Meta in resGeneSet['topMeta']:
+    print(Meta['pert_desc'], ',', Meta['pubchem_id'], ',', Meta['score'], ',', Meta['cell_id'])
