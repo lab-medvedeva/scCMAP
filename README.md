@@ -8,4 +8,4 @@ To start INTREGNET with the Connectivity mapping function, run cm_intregnet scri
 Example: 
 ./cm_intregnet.sh /home/iuliia/scINTREGNET Fibroblasts Neurons Fibroblast_aggregated_exp.tsv Neurons_agg.tsv Neurons_to_Fibroblasts_TFs_in_DEGs_promoters.txt Fibroblasts_to_Neurons_TFs_in_DEGs_promoters.txt
 
-The final table includes chemicals, the signature of which mimic the cellular conversion from initial to target cell type. The chemicals are ranked by a score which represents an overlap between the obtained core transcription factors and signature genes.
+The final table includes chemicals, the signature of which mimics the cellular conversion from initial to target cell type. The chemicals are ranked by a score which represents an overlap between the obtained core transcription factors and signature genes.
